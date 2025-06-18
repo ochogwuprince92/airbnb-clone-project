@@ -2,114 +2,162 @@
 
 ## Overview of the AirBnB Clone
 
-### 🚀 Objective  
 The backend for the Airbnb Clone project is designed to provide a robust and scalable foundation for managing user interactions, property listings, bookings, and payments. This backend will support various functionalities required to mimic the core features of Airbnb, ensuring a smooth experience for users and hosts.
 
 ---
 
-### 🏆 Project Goals  
-- **User Management**: Implement a secure system for user registration, authentication, and profile management.  
-- **Property Management**: Develop features for property listing creation, updates, and retrieval.  
-- **Booking System**: Create a booking mechanism for users to reserve properties and manage booking details.  
-- **Payment Processing**: Integrate a payment system to handle transactions and record payment details.  
-- **Review System**: Allow users to leave reviews and ratings for properties.  
-- **Data Optimization**: Ensure efficient data retrieval and storage through database optimizations.
+## 🚀 Project Goals
+
+- **User Management**: Secure registration, authentication, and profile handling  
+- **Property Management**: Create, update, and retrieve listings  
+- **Booking System**: Users can reserve properties and manage their bookings  
+- **Payment Processing**: Handle and record financial transactions  
+- **Review System**: Let users post and manage reviews  
+- **Data Optimization**: Fast data access through indexing and caching
 
 ---
 
-## 🛠️ Features Overview
+## 🛠️ Feature Breakdown
 
-### 1. API Documentation  
-- **OpenAPI Standard**: The backend APIs are documented using the OpenAPI standard to ensure clarity and ease of integration.  
-- **Django REST Framework**: Provides a comprehensive RESTful API for handling CRUD operations on user and property data.  
-- **GraphQL**: Offers a flexible and efficient query mechanism for interacting with the backend.
-
-### 2. User Authentication  
-- **Endpoints**: `/users/`, `/users/{user_id}/`  
-- **Features**: Register new users, authenticate, and manage user profiles.
-
-### 3. Property Management  
-- **Endpoints**: `/properties/`, `/properties/{property_id}/`  
-- **Features**: Create, update, retrieve, and delete property listings.
-
-### 4. Booking System  
-- **Endpoints**: `/bookings/`, `/bookings/{booking_id}/`  
-- **Features**: Make, update, and manage bookings, including check-in and check-out details.
-
-### 5. Payment Processing  
-- **Endpoints**: `/payments/`  
-- **Features**: Handle payment transactions related to bookings.
-
-### 6. Review System  
-- **Endpoints**: `/reviews/`, `/reviews/{review_id}/`  
-- **Features**: Post and manage reviews for properties.
-
-### 7. Database Optimizations  
-- **Indexing**: Implement indexes for fast retrieval of frequently accessed data.  
-- **Caching**: Use caching strategies to reduce database load and improve performance.
+- **User Management**: Handles user signup, login, and profile updates. Enables secure access and user-specific data control.  
+- **Property Management**: Hosts can list, edit, and delete properties. Essential for populating the platform with rentable spaces.  
+- **Booking System**: Users book properties, check availability, and manage their stays. Central to the platform’s function.  
+- **Payment Processing**: Manages secure financial transactions. Ensures smooth checkout and booking confirmations.  
+- **Review System**: Allows users to provide feedback on listings. Builds trust within the platform.  
+- **Database Optimization**: Enhances performance with indexing and caching strategies to reduce latency.
 
 ---
 
-## ⚙️ Technology Stack  
-- **Django**: A high-level Python web framework used for building the RESTful API.  
-- **Django REST Framework**: Provides tools for creating and managing RESTful APIs.  
-- **PostgreSQL**: A powerful relational database used for data storage.  
-- **GraphQL**: Allows for flexible and efficient querying of data.  
-- **Celery**: For handling asynchronous tasks such as sending notifications or processing payments.  
-- **Redis**: Used for caching and session management.  
-- **Docker**: Containerization tool for consistent development and deployment environments.  
-- **CI/CD Pipelines**: Automated pipelines for testing and deploying code changes.
+## 👥 Team Roles
+
+- **Backend Developer**: Builds APIs, writes business logic, integrates third-party tools.  
+- **Database Administrator**: Designs schemas, optimizes queries, ensures data integrity.  
+- **DevOps Engineer**: Manages deployment pipelines, infrastructure, and scalability.  
+- **QA Engineer**: Tests endpoints, validates data flow, and confirms all features meet project specs.
 
 ---
 
-## 👥 Team Roles  
-- **Backend Developer**: Responsible for implementing API endpoints, database schemas, and business logic.  
-- **Database Administrator**: Manages database design, indexing, and optimizations.  
-- **DevOps Engineer**: Handles deployment, monitoring, and scaling of the backend services.  
-- **QA Engineer**: Ensures the backend functionalities are thoroughly tested and meet quality standards.
+## ⚙️ Technology Stack
+
+- **Django**: A Python web framework used to build the backend APIs.  
+- **Django REST Framework (DRF)**: Simplifies building and testing RESTful APIs.  
+- **PostgreSQL**: A powerful, open-source relational database used to store structured data.  
+- **GraphQL**: Enables flexible data querying and reduces over-fetching in the frontend.  
+- **Celery**: Handles background tasks like sending confirmation emails.  
+- **Redis**: In-memory store used for caching and fast data access.  
+- **Docker**: Containerizes the backend for consistent dev/test/deployment.  
+- **CI/CD Tools** (GitHub Actions, Docker Hub): Automates testing and deployment workflows.
 
 ---
 
-## 📈 API Documentation Overview  
-- **REST API**: Detailed documentation available through the OpenAPI standard, including endpoints for users, properties, bookings, and payments.  
-- **GraphQL API**: Provides a flexible query language for retrieving and manipulating data.
+## 🧱 Database Design
+
+### Key Entities and Fields
+
+- **Users**
+  - `id`: UUID  
+  - `name`: string  
+  - `email`: unique string  
+  - `password`: hashed string  
+  - `role`: enum (host, guest)
+
+- **Properties**
+  - `id`: UUID  
+  - `owner`: FK to Users  
+  - `title`: string  
+  - `description`: text  
+  - `price`: decimal
+
+- **Bookings**
+  - `id`: UUID  
+  - `user`: FK to Users  
+  - `property`: FK to Properties  
+  - `check_in`: date  
+  - `check_out`: date
+
+- **Reviews**
+  - `id`: UUID  
+  - `author`: FK to Users  
+  - `property`: FK to Properties  
+  - `rating`: integer (1–5)  
+  - `comment`: text
+
+- **Payments**
+  - `id`: UUID  
+  - `booking`: FK to Bookings  
+  - `amount`: decimal  
+  - `status`: enum (pending, paid)
+
+### Relationships
+
+- A **user** can own many **properties**  
+- A **property** can have many **bookings**  
+- A **booking** is linked to one **user** and one **property**  
+- A **review** is written by a **user** and linked to one **property**  
+- A **payment** is tied to a **booking**
+
+---
+
+## 🔐 API Security
+
+- **Authentication**: Ensures only registered users can access protected endpoints (e.g., JWT or token-based).  
+- **Authorization**: Enforces role-based access (e.g., only hosts can manage listings).  
+- **Rate Limiting**: Prevents API abuse through excessive requests.  
+- **Data Validation**: Prevents injection and tampering via backend checks.  
+- **Secure Payments**: Payment data is encrypted and handled through secure gateways.
+
+> Security is critical to protect sensitive user data, maintain trust, and prevent financial or personal information leaks.
+
+---
+
+## 🔁 CI/CD Pipeline
+
+CI/CD (Continuous Integration and Continuous Deployment) automates testing, building, and releasing code to production safely and efficiently.
+
+### Tools Used:
+- **GitHub Actions**: For running tests and builds on every push or pull request  
+- **Docker**: To ensure consistent deployment environments  
+- **Docker Hub / GitHub Packages**: For storing and deploying container images
+
+> This pipeline helps maintain code quality, catch bugs early, and ship updates quickly.
 
 ---
 
 ## 📌 Endpoints Overview
 
-### 🧑‍💼 Users
+### Users
 - `GET /users/` – List all users  
 - `POST /users/` – Create a new user  
-- `GET /users/{user_id}/` – Retrieve a specific user  
-- `PUT /users/{user_id}/` – Update a specific user  
-- `DELETE /users/{user_id}/` – Delete a specific user  
+- `GET /users/{user_id}/` – Retrieve a user  
+- `PUT /users/{user_id}/` – Update a user  
+- `DELETE /users/{user_id}/` – Delete a user  
 
-### 🏘️ Properties
+### Properties
 - `GET /properties/` – List all properties  
 - `POST /properties/` – Create a new property  
-- `GET /properties/{property_id}/` – Retrieve a specific property  
-- `PUT /properties/{property_id}/` – Update a specific property  
-- `DELETE /properties/{property_id}/` – Delete a specific property  
+- `GET /properties/{property_id}/` – Retrieve a property  
+- `PUT /properties/{property_id}/` – Update a property  
+- `DELETE /properties/{property_id}/` – Delete a property  
 
-### 📅 Bookings
+### Bookings
 - `GET /bookings/` – List all bookings  
 - `POST /bookings/` – Create a new booking  
-- `GET /bookings/{booking_id}/` – Retrieve a specific booking  
-- `PUT /bookings/{booking_id}/` – Update a specific booking  
-- `DELETE /bookings/{booking_id}/` – Delete a specific booking  
+- `GET /bookings/{booking_id}/` – Retrieve a booking  
+- `PUT /bookings/{booking_id}/` – Update a booking  
+- `DELETE /bookings/{booking_id}/` – Delete a booking  
 
-### 💳 Payments
+### Payments
 - `POST /payments/` – Process a payment  
 
-### 📝 Reviews
+### Reviews
 - `GET /reviews/` – List all reviews  
 - `POST /reviews/` – Create a new review  
-- `GET /reviews/{review_id}/` – Retrieve a specific review  
-- `PUT /reviews/{review_id}/` – Update a specific review  
-- `DELETE /reviews/{review_id}/` – Delete a specific review  
+- `GET /reviews/{review_id}/` – Retrieve a review  
+- `PUT /reviews/{review_id}/` – Update a review  
+- `DELETE /reviews/{review_id}/` – Delete a review  
 
 ---
 
-## 🚀 Getting Started  
-This section will be updated as setup scripts and environment configurations are added.
+## 🚀 Getting Started
+
+This section will be updated with setup scripts, Docker configuration, and environment setup steps.
